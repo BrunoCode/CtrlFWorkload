@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,18 +20,65 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final EditText tv1 = (EditText)findViewById(R.id.txtFile);
+        //CtrlF Txt = new CtrlF();
         final Resources resources = getResources();
         String fileContents = null;
         try {
-            fileContents = loadFile("from_raw_folder.txt", false, resources);
-            TextView tv1 = (TextView)findViewById(R.id.txtFile);
+
+            fileContents = loadFile("beowulf.txt", false, resources);
             tv1.setText(fileContents);
+            int i = 0, count = 0;
+            long startTime = System.currentTimeMillis();
+            fileContents = fileContents.toLowerCase();
+
+            String Search = "e";
+
+            while (i < fileContents.length()) {
+                int SearchIndex = fileContents.indexOf(Search, i);
+                if (SearchIndex != -1){
+                    tv1.setSelection(SearchIndex,SearchIndex+Search.length());
+                    i = SearchIndex + Search.length();
+
+                    count++;
+                }
+                else {
+                    i = fileContents.length();
+                }
+            }
+            long endTime = System.currentTimeMillis();
+            long totalTime = (endTime - startTime);
+            final String result = "Count for " +"\"" + Search +"\""+":  "+ count+"\n\n  = "+ totalTime + " MS";
+
+            Thread t = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        while (!isInterrupted()) {
+                            Thread.sleep(10000);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tv1.setText(result);
+                                }
+                            });
+                        }
+                    } catch (InterruptedException e) {
+                    }
+                }
+            };
+
+            t.start();
+
         }catch (IOException e){
+            tv1.setText("Error");
             final Toast toast = Toast.makeText(this, "File: not found!", Toast.LENGTH_LONG);
             toast.show();
         }
 
     }
+
     public String loadFile(String fileName, boolean loadFromRawFolder, Resources resources) throws IOException
     {
         //Create a InputStream to read the file into

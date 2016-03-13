@@ -17,21 +17,26 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" >
-
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The file items go here"
+            android:id="@+id/txtFile"
+            android:editable="true"
+            android:background="#ffffff"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="#2f2c2c"
+            android:clickable="true"
+            android:contextClickable="true"
+            android:textIsSelectable="true"
+            android:focusableInTouchMode="true"
+            android:focusable="true"/>
     </ScrollView>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="The file items go here"
-        android:id="@+id/txtFile"
-        android:editable="true"
-        android:background="#ffffff"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="#2f2c2c" />
+
 </RelativeLayout>
