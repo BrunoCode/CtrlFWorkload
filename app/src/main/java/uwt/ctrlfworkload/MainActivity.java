@@ -15,69 +15,52 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
+    private long totalMS = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final EditText tv1 = (EditText)findViewById(R.id.txtFile);
+        final TextView tv2 = (TextView) findViewById(R.id.mResults);
+        final EditText tv1 = (EditText) findViewById(R.id.txtFile);
         //CtrlF Txt = new CtrlF();
         final Resources resources = getResources();
         String fileContents = null;
         try {
-
             fileContents = loadFile("beowulf.txt", false, resources);
             tv1.setText(fileContents);
+
+            for (int runs = 0; runs < 100; runs++) {
             int i = 0, count = 0;
             long startTime = System.currentTimeMillis();
             fileContents = fileContents.toLowerCase();
 
             String Search = "e";
 
-            while (i < fileContents.length()) {
-                int SearchIndex = fileContents.indexOf(Search, i);
-                if (SearchIndex != -1){
-                    tv1.setSelection(SearchIndex,SearchIndex+Search.length());
-                    i = SearchIndex + Search.length();
-
-                    count++;
-                }
-                else {
-                    i = fileContents.length();
-                }
-            }
-            long endTime = System.currentTimeMillis();
-            long totalTime = (endTime - startTime);
-            final String result = "Count for " +"\"" + Search +"\""+":  "+ count+"\n\n  = "+ totalTime + " MS";
-
-            Thread t = new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        while (!isInterrupted()) {
-                            Thread.sleep(10000);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    tv1.setText(result);
-                                }
-                            });
-                        }
-                    } catch (InterruptedException e) {
+                while (i < fileContents.length()) {
+                    int SearchIndex = fileContents.indexOf(Search, i);
+                    if (SearchIndex != -1) {
+                        tv1.setSelection(SearchIndex, SearchIndex + Search.length());
+                        i = SearchIndex + Search.length();
+                        count++;
+                    } else {
+                        i = fileContents.length();
                     }
                 }
-            };
-
-            t.start();
-
-        }catch (IOException e){
+                long endTime = System.currentTimeMillis();
+                long totalTime = (endTime - startTime);
+                final String result = "Count for " + "\"" + Search + "\"" + ":  " + count + "\n\n  = " + totalTime + " MS";
+                System.out.println(result);
+                totalMS += totalTime;
+            }
+        } catch (IOException e) {
             tv1.setText("Error");
             final Toast toast = Toast.makeText(this, "File: not found!", Toast.LENGTH_LONG);
             toast.show();
         }
-
+        System.out.println("Average time: "+totalMS/100 + " (100 Runs)");
+        tv2.setText("Average time: "+totalMS/100+"MS" + " (100 Runs)");
     }
+
 
     public String loadFile(String fileName, boolean loadFromRawFolder, Resources resources) throws IOException
     {
